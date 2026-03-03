@@ -14,14 +14,14 @@ const validationSchema = Yup.object({
     .min(3, "Too short")
     .max(50, "Too long")
     .required("Required"),
-  content: Yup.string(), // ✅ необов'язкове
-  tag: Yup.string().required("Required"),
+  content: Yup.string(),
+  tag: Yup.mixed<NoteTag>().required("Required"),
 });
 
 const initialValues: CreateNoteParams = {
   title: "",
   content: "",
-  tag: "Work" as NoteTag,
+  tag: "Work",
 };
 
 function NoteForm({ onClose }: NoteFormProps) {
@@ -47,23 +47,23 @@ function NoteForm({ onClose }: NoteFormProps) {
     >
       <Form>
         <div>
-          <label>Title</label>
-          <Field name="title" type="text" />
+          <label htmlFor="title">Title</label>
+          <Field id="title" name="title" type="text" />
           <ErrorMessage name="title" component="div" />
         </div>
 
         <div>
-          <label>Content</label>
-          <Field name="content" as="textarea" />
+          <label htmlFor="content">Content</label>
+          <Field id="content" name="content" as="textarea" />
           <ErrorMessage name="content" component="div" />
         </div>
 
         <div>
-          <label>Tag</label>
-          <Field name="tag" as="select">
+          <label htmlFor="tag">Tag</label>
+          <Field id="tag" name="tag" as="select">
+            <option value="Todo">Todo</option>
             <option value="Work">Work</option>
             <option value="Personal">Personal</option>
-            <option value="Meeting">Meeting</option>
             <option value="Shopping">Shopping</option>
           </Field>
           <ErrorMessage name="tag" component="div" />
