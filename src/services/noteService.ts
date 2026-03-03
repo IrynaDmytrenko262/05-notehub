@@ -63,3 +63,5 @@ export const createNote = async (
 export const deleteNote = async (id: string): Promise<void> => {
   await noteHubApi.delete(`/notes/${id}`);
 };
+
+console.log("TOKEN FROM ENV:", import.meta.env.VITE_NOTEHUB_TOKEN);
