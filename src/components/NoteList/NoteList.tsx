@@ -27,9 +27,8 @@ function NoteList({ notes }: NoteListProps) {
         <li key={note.id} className={css.listItem}>
           <h3 className={css.title}>{note.title}</h3>
 
-          {note.content && (
-            <p className={css.content}>{note.content}</p>
-          )}
+          {/* ✅ content рендериться ЗАВЖДИ */}
+          <p className={css.content}>{note.content}</p>
 
           <div className={css.footer}>
             <span className={css.tag}>Tag: {note.tag}</span>
