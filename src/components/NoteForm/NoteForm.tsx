@@ -59,15 +59,16 @@ function NoteForm({ onClose }: NoteFormProps) {
         </div>
 
         <div>
-          <label htmlFor="tag">Tag</label>
-          <Field id="tag" name="tag" as="select">
-            <option value="Todo">Todo</option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
-            <option value="Shopping">Shopping</option>
-          </Field>
-          <ErrorMessage name="tag" component="div" />
-        </div>
+  <label htmlFor="tag">Tag</label>
+  <Field id="tag" name="tag" as="select">
+    <option value="Todo">Todo</option>
+    <option value="Work">Work</option>
+    <option value="Personal">Personal</option>
+    <option value="Shopping">Shopping</option>
+    <option value="Meeting">Meeting</option>
+  </Field>
+  <ErrorMessage name="tag" component="div" />
+</div>
 
         <button type="submit" disabled={mutation.isPending}>
           Create
