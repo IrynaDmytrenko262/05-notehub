@@ -28,8 +28,6 @@ export interface FetchNotesParams {
 export interface FetchNotesResponse {
   notes: Note[];
   totalPages: number;
-  currentPage: number;
-  totalItems: number;
 }
 
 export interface CreateNoteParams {
@@ -60,8 +58,7 @@ export const createNote = async (
   return data;
 };
 
-export const deleteNote = async (id: string): Promise<void> => {
-  await noteHubApi.delete(`/notes/${id}`);
+export const deleteNote = async (id: string): Promise<Note> => {
+  const { data } = await noteHubApi.delete<Note>(`/notes/${id}`);
+  return data;
 };
-
-console.log("TOKEN FROM ENV:", import.meta.env.VITE_NOTEHUB_TOKEN);
