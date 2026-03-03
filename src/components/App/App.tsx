@@ -1,17 +1,8 @@
 import css from "./App.module.css";
 import { useState } from "react";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
-import {
-  fetchNotes,
-  createNote,
-  deleteNote,
-  type CreateNoteParams,
-} from "../../services/noteService";
+import { fetchNotes } from "../../services/noteService";
 
 import NoteList from "../NoteList/NoteList";
 import NoteForm from "../NoteForm/NoteForm";
@@ -20,12 +11,9 @@ import Pagination from "../Pagination/Pagination";
 import SearchBox from "../SearchBox/SearchBox";
 
 function App() {
-  const queryClient = useQueryClient();
-
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", page, search],
@@ -39,33 +27,6 @@ function App() {
 
   const notes = data?.notes ?? [];
   const totalPages = data?.totalPages ?? 0;
-
-  const deleteMutation = useMutation({
-    mutationFn: deleteNote,
-    onMutate: (id: string) => {
-      setDeletingId(id);
-    },
-    onSettled: () => {
-      setDeletingId(null);
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
-    },
-  });
-
-  const createMutation = useMutation({
-    mutationFn: createNote,
-    onSuccess: () => {
-      setIsModalOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
-    },
-  });
-
-  const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
-  };
-
-  const handleCreate = (newNote: CreateNoteParams) => {
-    createMutation.mutate(newNote);
-  };
 
   return (
     <div className={css.app}>
@@ -85,11 +46,7 @@ function App() {
       {isLoading && <p>Loading...</p>}
       {isError && <p>Something went wrong...</p>}
 
-      <NoteList
-        notes={notes}
-        onDelete={handleDelete}
-        deletingId={deletingId}
-      />
+      <NoteList notes={notes} />
 
       {totalPages > 1 && (
         <Pagination
@@ -101,7 +58,7 @@ function App() {
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm onCreate={handleCreate} />
+          <NoteForm onClose={() => setIsModalOpen(false)} />
         </Modal>
       )}
     </div>
