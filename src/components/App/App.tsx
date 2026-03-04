@@ -1,6 +1,6 @@
 import css from "./App.module.css";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 
 import { fetchNotes } from "../../services/noteService";
@@ -16,10 +16,8 @@ function App() {
   const [page, setPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // ✅ debounce
   const [debouncedSearch] = useDebounce(search, 500);
 
-  // ✅ використовуємо debouncedSearch
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", page, debouncedSearch],
     queryFn: () =>
@@ -28,12 +26,12 @@ function App() {
         perPage: 12,
         search: debouncedSearch,
       }),
+    placeholderData: keepPreviousData,
   });
 
   const notes = data?.notes ?? [];
   const totalPages = data?.totalPages ?? 0;
 
-  // ✅ reset page при зміні пошуку
   const handleSearchChange = (value: string) => {
     setSearch(value);
     setPage(1);
